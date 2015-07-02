@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/abc_action_bar_progress_bar_size"
+        android:text="Please choose :"
+        android:textStyle="bold"
+        android:textColor="#fff"
+        android:id="@+id/textView" />
+    <ImageButton
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton2"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/abc_text_size_title_material_toolbar"
+
+        android:background="@drawable/del3"
+        android:onClick="DelivaryClickedButton" />
+
+    <ImageButton
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/abc_text_size_title_material_toolbar"
+
+        android:background="@drawable/visit1"
+        android:onClick="visitorClickedButton" />
+
+
+
+
+
+
+</LinearLayout>
