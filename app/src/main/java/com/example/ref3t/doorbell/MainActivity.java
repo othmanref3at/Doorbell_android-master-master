@@ -17,6 +17,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 
@@ -33,6 +37,11 @@ public class MainActivity extends ActionBarActivity {
     String[] string_tokanizer;
     StringBuffer buffer;
 
+    String str_id = "";
+    String[] tokenid;
+
+
+    StringBuffer bufferid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +90,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void interClickedButton(View view) {
-        //interVeiw();
+        interVeiw();
+
 
     }
 
@@ -90,33 +100,45 @@ public class MainActivity extends ActionBarActivity {
 
         Firebase.setAndroidContext(getApplication().getApplicationContext());
 
-        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");
+        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Interview");
         buffer = new StringBuffer();
-
+        bufferid=new StringBuffer();
         ref.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 buffer.append(snapshot.getValue());
-
+                bufferid.append(snapshot.getValue());
                 str_name = buffer.toString();
+                str_id = bufferid.toString();
+
                 buffer.setLength(0);
+                bufferid.setLength(0);
                 string_tokanizer = str_name.split(",");
-                Toast.makeText(getBaseContext(), snapshot.getValue() + "NNNNNNNN", Toast.LENGTH_SHORT).show();
+                tokenid = str_id.split(",");
+                string_tokanizer = str_name.split(",");
                 for (int index = 0; index < string_tokanizer.length; index++) {
                     if (string_tokanizer[index].contains("name=")) {
                         int indeex1 = string_tokanizer[index].indexOf("=");
                         string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
 
-                        buffer.append(string_tokanizer[index] + "#");
+                        Toast.makeText(getBaseContext(),string_tokanizer[index], Toast.LENGTH_SHORT).show();
+                    }
+                }
+                for (int index = 0; index < tokenid.length; index++) {
+                    if (tokenid[index].contains("token=")) {
+
+
+                        int indeex2 = tokenid[index].lastIndexOf("token=");
+                        tokenid[index] = tokenid[index].substring(indeex2 +6, tokenid[index].length());
+
+                        Toast.makeText(getBaseContext(),tokenid[index], Toast.LENGTH_SHORT).show();
+
+
                     }
                 }
 
-                name_array = buffer.toString().split("#");
 
-                items = buffer.toString().split("#");
-
-                Toast.makeText(getBaseContext(), name_array[1] + "hhhhhhhhh", Toast.LENGTH_SHORT).show();
 
 
             }

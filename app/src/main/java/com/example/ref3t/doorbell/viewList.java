@@ -194,44 +194,59 @@ public class viewList extends ActionBarActivity {
 
     public void initListDefult() {
 
-        Firebase.setAndroidContext(getApplication().getApplicationContext());
+            Firebase.setAndroidContext(getApplication().getApplicationContext());
 
-        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");
-        buffer = new StringBuffer();
+            ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Defult");
+            buffer = new StringBuffer();
+            bufferid=new StringBuffer();
+            ref.addValueEventListener(new ValueEventListener() {
 
-        ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    buffer.append(snapshot.getValue());
+                    bufferid.append(snapshot.getValue());
+                    str_name = buffer.toString();
+                    str_id = bufferid.toString();
 
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                buffer.append(snapshot.getValue());
+                    buffer.setLength(0);
+                    bufferid.setLength(0);
+                    string_tokanizer = str_name.split(",");
+                    tokenid = str_id.split(",");
+                    string_tokanizer = str_name.split(",");
+                    for (int index = 0; index < string_tokanizer.length; index++) {
+                        if (string_tokanizer[index].contains("name=")) {
+                            int indeex1 = string_tokanizer[index].indexOf("=");
+                            string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
 
-                str_name = buffer.toString();
-                buffer.setLength(0);
-                string_tokanizer = str_name.split(",");
-                Toast.makeText(getBaseContext(), snapshot.getValue() + "NNNNNNNN", Toast.LENGTH_SHORT).show();
-                for (int index = 0; index < string_tokanizer.length; index++) {
-                    if (string_tokanizer[index].contains("name=")) {
-                        int indeex1 = string_tokanizer[index].indexOf("=");
-                        string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
-
-                        buffer.append(string_tokanizer[index] + "#");
+                            Toast.makeText(getBaseContext(),string_tokanizer[index], Toast.LENGTH_SHORT).show();
+                        }
                     }
+                    for (int index = 0; index < tokenid.length; index++) {
+                        if (tokenid[index].contains("token=")) {
+
+
+                            int indeex2 = tokenid[index].lastIndexOf("token=");
+                            tokenid[index] = tokenid[index].substring(indeex2 +6, tokenid[index].length());
+
+                            Toast.makeText(getBaseContext(),tokenid[index], Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    }
+
+
+
+
                 }
 
-                name_array = buffer.toString().split("#");
 
-                items = buffer.toString().split("#");
+                @Override
+                public void onCancelled(FirebaseError error) {
 
+                }
 
-            }
+            });
 
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-
-            }
-
-        });
 
 
     }
