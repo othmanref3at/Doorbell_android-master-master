@@ -29,19 +29,22 @@ public class viewList extends ActionBarActivity {
     ListView listView;
     EditText editText;
     private Firebase ref;
-    String str_name="";
-    ListView listname;
-    String [] name_array;
-    String [] string_tokanizer;
-    String[] name ;
+    String str_name = "";
+    String str_id = "";
+    String[] name_array;
+    String[] string_tokanizer;
+    String[] tokenid;
 
     StringBuffer buffer;
+
+    StringBuffer bufferid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_list);
-        listView=(ListView)findViewById(R.id.listview);
-        editText=(EditText)findViewById(R.id.txtsearch);
+        listView = (ListView) findViewById(R.id.listview);
+        editText = (EditText) findViewById(R.id.txtsearch);
 
         initList();
         editText.addTextChangedListener(new TextWatcher() {
@@ -63,7 +66,7 @@ public class viewList extends ActionBarActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //
-                               Toast.makeText(getBaseContext(),listItems.get(position), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), listItems.get(position), Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -76,9 +79,10 @@ public class viewList extends ActionBarActivity {
             }
         });
     }
-    public void searchItem(String textToSearch){
-        for(String item:items){
-            if(!item.contains(textToSearch)){
+
+    public void searchItem(String textToSearch) {
+        for (String item : items) {
+            if (!item.contains(textToSearch)) {
                 listItems.remove(item);
 
 
@@ -89,23 +93,26 @@ public class viewList extends ActionBarActivity {
 
 
     }
-    public void initList(){
+    String [] Id;
+    public void initList() {
 
         Firebase.setAndroidContext(getApplication().getApplicationContext());
-
+//        Toast.makeText(getBaseContext(), "NNNNNNNN", Toast.LENGTH_SHORT).show();
         ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");
-        buffer=new StringBuffer();
-
+        buffer = new StringBuffer();
+        bufferid = new StringBuffer();
         ref.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 buffer.append(snapshot.getValue());
-
+                bufferid.append(snapshot.getValue());
                 str_name = buffer.toString();
+                str_id = bufferid.toString();
                 buffer.setLength(0);
+                bufferid.setLength(0);
                 string_tokanizer = str_name.split(",");
-                // Toast.makeText(getBaseContext(), snapshot.getValue() + "NNNNNNNN", Toast.LENGTH_SHORT).show();
+                tokenid = str_id.split(",");
                 for (int index = 0; index < string_tokanizer.length; index++) {
                     if (string_tokanizer[index].contains("name=")) {
                         int indeex1 = string_tokanizer[index].indexOf("=");
@@ -114,23 +121,22 @@ public class viewList extends ActionBarActivity {
                         buffer.append(string_tokanizer[index] + "#");
                     }
                 }
+                for (int index = 0; index < tokenid.length; index++) {
+                    if (tokenid[index].contains("token=")) {
+
+
+                        int indeex2 = tokenid[index].lastIndexOf("=");
+                      tokenid[index] = tokenid[index].substring(indeex2 + 1, tokenid[index].length());
+
+                        bufferid.append(tokenid[index] + "#");
+
+                    }
+                }
 
                 name_array = buffer.toString().split("#");
 
                 items = buffer.toString().split("#");
-
-//                listView.setAdapter(new ArrayAdapter<String>(viewList.this, android.R.layout.simple_list_item_1, name_array));
-//
-//                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        Toast.makeText(getBaseContext(), name_array[position], Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-                Toast.makeText(getBaseContext(), name_array[1], Toast.LENGTH_SHORT).show();
-
-                //items = new String[]{"canada", "rafeee", "china", "japan", "uSA", "refat", "rere", "rafe3"};
-
+                Id=bufferid.toString().split("#");
 
                 listItems = new ArrayList<>(Arrays.asList(items));
                 adapter = new ArrayAdapter<String>(viewList.this, R.layout.list_item, R.id.txtitem, listItems);
@@ -138,8 +144,8 @@ public class viewList extends ActionBarActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-                        Toast.makeText(getBaseContext(), listItems.get(position), Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(getBaseContext(), listItems.get(position)+"**"+Id[position], Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -157,6 +163,7 @@ public class viewList extends ActionBarActivity {
 
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -177,5 +184,55 @@ public class viewList extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void ClickButtonDefualt(View view) {
+        Toast.makeText(this, "lllll", Toast.LENGTH_LONG).show();
+        initListDefult();
+    }
+
+
+    public void initListDefult() {
+
+        Firebase.setAndroidContext(getApplication().getApplicationContext());
+
+        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");
+        buffer = new StringBuffer();
+
+        ref.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                buffer.append(snapshot.getValue());
+
+                str_name = buffer.toString();
+                buffer.setLength(0);
+                string_tokanizer = str_name.split(",");
+                Toast.makeText(getBaseContext(), snapshot.getValue() + "NNNNNNNN", Toast.LENGTH_SHORT).show();
+                for (int index = 0; index < string_tokanizer.length; index++) {
+                    if (string_tokanizer[index].contains("name=")) {
+                        int indeex1 = string_tokanizer[index].indexOf("=");
+                        string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
+
+                        buffer.append(string_tokanizer[index] + "#");
+                    }
+                }
+
+                name_array = buffer.toString().split("#");
+
+                items = buffer.toString().split("#");
+
+
+            }
+
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+
+            }
+
+        });
+
+
     }
 }
