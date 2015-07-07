@@ -18,8 +18,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class viewList extends ActionBarActivity {
@@ -34,6 +38,9 @@ public class viewList extends ActionBarActivity {
     String[] name_array;
     String[] string_tokanizer;
     String[] tokenid;
+    private Firebase vistor;
+
+    Map<String, String> post2 = new HashMap<String, String>();
 
     StringBuffer buffer;
 
@@ -99,6 +106,13 @@ public class viewList extends ActionBarActivity {
         Firebase.setAndroidContext(getApplication().getApplicationContext());
 //        Toast.makeText(getBaseContext(), "NNNNNNNN", Toast.LENGTH_SHORT).show();
         ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");
+
+        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");
+
+        final Calendar calender=Calendar.getInstance();
+        final SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
+
+        final Firebase addhistory = vistor.child("History");
         buffer = new StringBuffer();
         bufferid = new StringBuffer();
         ref.addValueEventListener(new ValueEventListener() {
@@ -144,6 +158,20 @@ public class viewList extends ActionBarActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                         Calendar calender=Calendar.getInstance();
+                         SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
+
+                          Firebase addhistory = vistor.child("History");
+                        String date_time=form.format(calender.getTime());
+
+                        date_time=date_time.replaceAll(" ","-");
+//                        Toast.makeText(getBaseContext(),date_time, Toast.LENGTH_LONG).show();
+
+                        post2.put("name", listItems.get(position));
+                        post2.put("type", "Delivary");
+                        post2.put("Time", date_time);
+                        addhistory.push().setValue(post2);
 
                         Toast.makeText(getBaseContext(), listItems.get(position)+"**"+Id[position], Toast.LENGTH_SHORT).show();
 
@@ -197,6 +225,10 @@ public class viewList extends ActionBarActivity {
             Firebase.setAndroidContext(getApplication().getApplicationContext());
 
             ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Defult");
+
+        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");
+
+        final Firebase addhistory = vistor.child("History");
             buffer = new StringBuffer();
             bufferid=new StringBuffer();
             ref.addValueEventListener(new ValueEventListener() {
@@ -212,6 +244,9 @@ public class viewList extends ActionBarActivity {
                     bufferid.setLength(0);
                     string_tokanizer = str_name.split(",");
                     tokenid = str_id.split(",");
+
+                    Calendar calender=Calendar.getInstance();
+                    SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
                     string_tokanizer = str_name.split(",");
                     for (int index = 0; index < string_tokanizer.length; index++) {
                         if (string_tokanizer[index].contains("name=")) {
@@ -219,6 +254,14 @@ public class viewList extends ActionBarActivity {
                             string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
 
                             Toast.makeText(getBaseContext(),string_tokanizer[index], Toast.LENGTH_SHORT).show();
+                            String date_time=form.format(calender.getTime());
+                            date_time=date_time.replaceAll(" ","-");
+//                        Toast.makeText(getBaseContext(),date_time, Toast.LENGTH_LONG).show();
+
+                            post2.put("name", string_tokanizer[index]);
+                            post2.put("type", "Delivary");
+                            post2.put("Time", date_time);
+                            addhistory.push().setValue(post2);
                         }
                     }
                     for (int index = 0; index < tokenid.length; index++) {

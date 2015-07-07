@@ -21,7 +21,12 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.SimpleFormatter;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -32,11 +37,12 @@ public class MainActivity extends ActionBarActivity {
     ListView listView;
     EditText editText;
     private Firebase ref;
+    private Firebase vistor;
     String str_name = "";
     String[] name_array;
     String[] string_tokanizer;
     StringBuffer buffer;
-
+    Map<String, String> post2 = new HashMap<String, String>();
     String str_id = "";
     String[] tokenid;
 
@@ -101,6 +107,10 @@ public class MainActivity extends ActionBarActivity {
         Firebase.setAndroidContext(getApplication().getApplicationContext());
 
         ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Interview");
+        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");
+
+       final Firebase addhistory = vistor.child("History");
+
         buffer = new StringBuffer();
         bufferid=new StringBuffer();
         ref.addValueEventListener(new ValueEventListener() {
@@ -111,18 +121,30 @@ public class MainActivity extends ActionBarActivity {
                 bufferid.append(snapshot.getValue());
                 str_name = buffer.toString();
                 str_id = bufferid.toString();
-
                 buffer.setLength(0);
                 bufferid.setLength(0);
                 string_tokanizer = str_name.split(",");
                 tokenid = str_id.split(",");
                 string_tokanizer = str_name.split(",");
+                Calendar calender=Calendar.getInstance();
+                SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
                 for (int index = 0; index < string_tokanizer.length; index++) {
                     if (string_tokanizer[index].contains("name=")) {
                         int indeex1 = string_tokanizer[index].indexOf("=");
                         string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
 
-                        Toast.makeText(getBaseContext(),string_tokanizer[index], Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getBaseContext(), string_tokanizer[index]+"  ", Toast.LENGTH_SHORT).show();
+                         ;
+                        String date_time=form.format(calender.getTime());
+                        date_time=date_time.replaceAll(" ","-");
+//                        Toast.makeText(getBaseContext(),date_time, Toast.LENGTH_LONG).show();
+
+                        post2.put("name", string_tokanizer[index]);
+                        post2.put("type", "Interview");
+                        post2.put("Time", date_time);
+                        addhistory.push().setValue(post2);
+
+                        //vistor.setValue(string_tokanizer[index],"interview");
                     }
                 }
                 for (int index = 0; index < tokenid.length; index++) {
