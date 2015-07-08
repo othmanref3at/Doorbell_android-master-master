@@ -44,13 +44,14 @@ public class Employee extends ActionBarActivity {
     Map<String, String> push_to_firebase = new HashMap<String, String>();
     StringBuffer buffer_name;
     StringBuffer bufferid_token;
-    String number="";
+    String number = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_list);
-        Intent intent=this.getIntent() ;
-        number=intent.getStringExtra("key");
+        Intent intent = this.getIntent();
+        number = intent.getStringExtra("key");
         listView = (ListView) findViewById(R.id.listview);
         editText = (EditText) findViewById(R.id.txtsearch);
         //call funciton initialise of list to search
@@ -72,7 +73,8 @@ public class Employee extends ActionBarActivity {
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(getBaseContext(), listItems.get(position), Toast.LENGTH_SHORT).show();
+                            add_to_database(position);
+                            Toast.makeText(getBaseContext(), listItems.get(position) + "kkkk", Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -84,6 +86,29 @@ public class Employee extends ActionBarActivity {
 
             }
         });
+    }
+
+    private void add_to_database(int position) {
+        Calendar calender = Calendar.getInstance();
+        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
+        Firebase addhistory = vistor.child("History");
+        String date_time = form.format(calender.getTime());
+        date_time = date_time.replaceAll(" ", "-");
+        //check if the button delivry or visitor
+        if (number.equals("delivary")) {
+            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
+            push_to_firebase.put("name", listItems.get(position));
+            push_to_firebase.put("type", "Delivary");
+            push_to_firebase.put("Time", date_time);
+            addhistory.push().setValue(push_to_firebase);
+        } else {
+            push_to_firebase.put("name", listItems.get(position));
+            push_to_firebase.put("type", "Vistor");
+            push_to_firebase.put("Time", date_time);
+            addhistory.push().setValue(push_to_firebase);
+
+            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
+        }//end if
     }
 
     //function to search item in list
@@ -98,12 +123,9 @@ public class Employee extends ActionBarActivity {
 
     //function intialization of list and add to the database
     public void initList() {
-
         Firebase.setAndroidContext(getApplication().getApplicationContext());
         ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");//refrence of all employee in database
-
         vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");////refrence of history in database
-
         final Calendar calender = Calendar.getInstance();//Get calender of pc
         final SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
         final Firebase addhistory = vistor.child("History");
@@ -145,36 +167,13 @@ public class Employee extends ActionBarActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        Calendar calender = Calendar.getInstance();
-                        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
-                        Firebase addhistory = vistor.child("History");
-                        String date_time = form.format(calender.getTime());
-                        date_time = date_time.replaceAll(" ", "-");
-
-                        if(number.equals("delivary")) {
-                            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
-                            push_to_firebase.put("name", listItems.get(position));
-                            push_to_firebase.put("type", "Delivary");
-                            push_to_firebase.put("Time", date_time);
-                            addhistory.push().setValue(push_to_firebase);
-                        }else{
-                            push_to_firebase.put("name", listItems.get(position));
-                            push_to_firebase.put("type", "Vistor");
-                            push_to_firebase.put("Time", date_time);
-                            addhistory.push().setValue(push_to_firebase);
-
-                            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
-                        }
+                        add_to_database(position);
                         Toast.makeText(getBaseContext(), listItems.get(position) + "**" + Id[position], Toast.LENGTH_SHORT).show();
 
                     }
                 });
 
-
             }
-
-
             @Override
             public void onCancelled(FirebaseError error) {
 
@@ -245,13 +244,13 @@ public class Employee extends ActionBarActivity {
                         String date_time = form.format(calender.getTime());
                         date_time = date_time.replaceAll(" ", "-");
 
-                        if(number.equals("delivary")) {
+                        if (number.equals("delivary")) {
                             Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
-                            push_to_firebase.put("name",  string_tokanizer[index]);
+                            push_to_firebase.put("name", string_tokanizer[index]);
                             push_to_firebase.put("type", "Delivary");
                             push_to_firebase.put("Time", date_time);
                             addhistory.push().setValue(push_to_firebase);
-                        }else{
+                        } else {
                             push_to_firebase.put("name", string_tokanizer[index]);
                             push_to_firebase.put("type", "Vistor");
                             push_to_firebase.put("Time", date_time);
