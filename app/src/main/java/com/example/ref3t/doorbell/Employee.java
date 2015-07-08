@@ -1,5 +1,6 @@
 package com.example.ref3t.doorbell;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,37 +28,36 @@ import java.util.Map;
 
 
 public class Employee extends ActionBarActivity {
-    String[] items;
-    ArrayList<String> listItems;
+    String[] items_name;//array of name
+    ArrayList<String> listItems;//list of serch list
     ArrayAdapter<String> adapter;
     ListView listView;
     EditText editText;
-    private Firebase ref;
-    String str_name = "";
-    String str_id = "";
+    private Firebase ref;//refrence of firbase
+    String str_name = "";//string of names
+    String str_id = "";//string of ides
     String[] name_array;
     String[] string_tokanizer;
     String[] tokenid;
     private Firebase vistor;
-
-    Map<String, String> post2 = new HashMap<String, String>();
-
-    StringBuffer buffer;
-
-    StringBuffer bufferid;
-
+    String[] Id;
+    Map<String, String> push_to_firebase = new HashMap<String, String>();
+    StringBuffer buffer_name;
+    StringBuffer bufferid_token;
+    String number="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_list);
+        Intent intent=this.getIntent() ;
+        number=intent.getStringExtra("key");
         listView = (ListView) findViewById(R.id.listview);
         editText = (EditText) findViewById(R.id.txtsearch);
-
+        //call funciton initialise of list to search
         initList();
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -65,14 +65,13 @@ public class Employee extends ActionBarActivity {
                 if (s.toString().equals("")) {
                     // reset listview
                     initList();
-
                 } else {
                     // perform search
                     searchItem(s.toString());
+                    //listener of list item to send notify
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
                             Toast.makeText(getBaseContext(), listItems.get(position), Toast.LENGTH_SHORT).show();
 
                         }
@@ -87,93 +86,87 @@ public class Employee extends ActionBarActivity {
         });
     }
 
+    //function to search item in list
     public void searchItem(String textToSearch) {
-        for (String item : items) {
+        for (String item : items_name) {
             if (!item.contains(textToSearch)) {
-                listItems.remove(item);
-
-
-            }
-
-        }
+                listItems.remove(item);//remove items in array list
+            }//end if
+        }//end for
         adapter.notifyDataSetChanged();
+    }//end function searchItem
 
-
-    }
-    String [] Id;
+    //function intialization of list and add to the database
     public void initList() {
 
         Firebase.setAndroidContext(getApplication().getApplicationContext());
-//        Toast.makeText(getBaseContext(), "NNNNNNNN", Toast.LENGTH_SHORT).show();
-        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");
+        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/EMPLOYEE");//refrence of all employee in database
 
-        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");
+        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");////refrence of history in database
 
-        final Calendar calender=Calendar.getInstance();
-        final SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
-
+        final Calendar calender = Calendar.getInstance();//Get calender of pc
+        final SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
         final Firebase addhistory = vistor.child("History");
-        buffer = new StringBuffer();
-        bufferid = new StringBuffer();
+        buffer_name = new StringBuffer();//buffer to add name
+        bufferid_token = new StringBuffer();//buffer to add id token
+        //add listener to list and add to history in firbase
         ref.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                buffer.append(snapshot.getValue());
-                bufferid.append(snapshot.getValue());
-                str_name = buffer.toString();
-                str_id = bufferid.toString();
-                buffer.setLength(0);
-                bufferid.setLength(0);
+                buffer_name.append(snapshot.getValue());//get data frome firbase to set name
+                bufferid_token.append(snapshot.getValue());//get data frome firbase to set token Api
+                str_name = buffer_name.toString();
+                str_id = bufferid_token.toString();
+                buffer_name.setLength(0);//reset buffer
+                bufferid_token.setLength(0);//reset buffer
                 string_tokanizer = str_name.split(",");
                 tokenid = str_id.split(",");
+                //loop to add name and token to firebase
                 for (int index = 0; index < string_tokanizer.length; index++) {
                     if (string_tokanizer[index].contains("name=")) {
                         int indeex1 = string_tokanizer[index].indexOf("=");
                         string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
 
-                        buffer.append(string_tokanizer[index] + "#");
-                    }
-                }
-                for (int index = 0; index < tokenid.length; index++) {
+                        buffer_name.append(string_tokanizer[index] + "#");
+                    }//end if
                     if (tokenid[index].contains("token=")) {
-
-
                         int indeex2 = tokenid[index].lastIndexOf("=");
                         tokenid[index] = tokenid[index].substring(indeex2 + 1, tokenid[index].length());
-
-                        bufferid.append(tokenid[index] + "#");
-
-                    }
-                }
-
-                name_array = buffer.toString().split("#");
-
-                items = buffer.toString().split("#");
-                Id=bufferid.toString().split("#");
-
-                listItems = new ArrayList<>(Arrays.asList(items));
+                        bufferid_token.append(tokenid[index] + "#");
+                    }//end if
+                }//end for loop
+                name_array = buffer_name.toString().split("#");
+                items_name = buffer_name.toString().split("#");
+                Id = bufferid_token.toString().split("#");
+                listItems = new ArrayList<>(Arrays.asList(items_name));
                 adapter = new ArrayAdapter<String>(Employee.this, R.layout.list_item, R.id.txtitem, listItems);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        Calendar calender=Calendar.getInstance();
-                        SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
-
+                        Calendar calender = Calendar.getInstance();
+                        SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
                         Firebase addhistory = vistor.child("History");
-                        String date_time=form.format(calender.getTime());
+                        String date_time = form.format(calender.getTime());
+                        date_time = date_time.replaceAll(" ", "-");
 
-                        date_time=date_time.replaceAll(" ","-");
-//                        Toast.makeText(getBaseContext(),date_time, Toast.LENGTH_LONG).show();
+                        if(number.equals("delivary")) {
+                            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
+                            push_to_firebase.put("name", listItems.get(position));
+                            push_to_firebase.put("type", "Delivary");
+                            push_to_firebase.put("Time", date_time);
+                            addhistory.push().setValue(push_to_firebase);
+                        }else{
+                            push_to_firebase.put("name", listItems.get(position));
+                            push_to_firebase.put("type", "Vistor");
+                            push_to_firebase.put("Time", date_time);
+                            addhistory.push().setValue(push_to_firebase);
 
-                        post2.put("name", listItems.get(position));
-                        post2.put("type", "Vistor");
-                        post2.put("Time", date_time);
-                        addhistory.push().setValue(post2);
-
-                        Toast.makeText(getBaseContext(), listItems.get(position)+"**"+Id[position], Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
+                        }
+                        Toast.makeText(getBaseContext(), listItems.get(position) + "**" + Id[position], Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -214,72 +207,65 @@ public class Employee extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Button click Defualt
     public void ClickButtonDefualt(View view) {
-        Toast.makeText(this, "lllll", Toast.LENGTH_LONG).show();
+        //call function to intialize list of defult employee
         initListDefult();
     }
 
 
     public void initListDefult() {
-
         Firebase.setAndroidContext(getApplication().getApplicationContext());
-
-        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Defult");
-
-        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");
-
+        ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Defult");//refrence link of firebase of default
+        vistor = new Firebase("https://doorbellyamsafer.firebaseio.com/DataVistor");//refrence link of firebase of history
         final Firebase addhistory = vistor.child("History");
-        buffer = new StringBuffer();
-        bufferid=new StringBuffer();
+        buffer_name = new StringBuffer();
+        bufferid_token = new StringBuffer();
+        //listener to add list of defult to firbase and push notify to list of default
         ref.addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                buffer.append(snapshot.getValue());
-                bufferid.append(snapshot.getValue());
-                str_name = buffer.toString();
-                str_id = bufferid.toString();
-
-                buffer.setLength(0);
-                bufferid.setLength(0);
+                buffer_name.append(snapshot.getValue());//get data from firbase
+                bufferid_token.append(snapshot.getValue());//get data from firbase
+                str_name = buffer_name.toString();
+                str_id = bufferid_token.toString();
+                buffer_name.setLength(0);//reset the buffer
+                bufferid_token.setLength(0);//reset the buffer
                 string_tokanizer = str_name.split(",");
                 tokenid = str_id.split(",");
-
-                Calendar calender=Calendar.getInstance();
-                SimpleDateFormat form=new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
+                Calendar calender = Calendar.getInstance();
+                SimpleDateFormat form = new SimpleDateFormat("yyyy-MM-dd      HH:mm:ss");
                 string_tokanizer = str_name.split(",");
+                //loop to add name and type and date to history in database
                 for (int index = 0; index < string_tokanizer.length; index++) {
                     if (string_tokanizer[index].contains("name=")) {
                         int indeex1 = string_tokanizer[index].indexOf("=");
                         string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
+                        Toast.makeText(getBaseContext(), string_tokanizer[index], Toast.LENGTH_SHORT).show();
+                        String date_time = form.format(calender.getTime());
+                        date_time = date_time.replaceAll(" ", "-");
 
-                        Toast.makeText(getBaseContext(),string_tokanizer[index], Toast.LENGTH_SHORT).show();
-                        String date_time=form.format(calender.getTime());
-                        date_time=date_time.replaceAll(" ","-");
-//                        Toast.makeText(getBaseContext(),date_time, Toast.LENGTH_LONG).show();
+                        if(number.equals("delivary")) {
+                            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
+                            push_to_firebase.put("name",  string_tokanizer[index]);
+                            push_to_firebase.put("type", "Delivary");
+                            push_to_firebase.put("Time", date_time);
+                            addhistory.push().setValue(push_to_firebase);
+                        }else{
+                            push_to_firebase.put("name", string_tokanizer[index]);
+                            push_to_firebase.put("type", "Vistor");
+                            push_to_firebase.put("Time", date_time);
+                            addhistory.push().setValue(push_to_firebase);
 
-                        post2.put("name", string_tokanizer[index]);
-                        post2.put("type", "Vistor");
-                        post2.put("Time", date_time);
-                        addhistory.push().setValue(post2);
-                    }
-                }
-                for (int index = 0; index < tokenid.length; index++) {
+                            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
+                        }
+                    }//end if
                     if (tokenid[index].contains("token=")) {
-
-
                         int indeex2 = tokenid[index].lastIndexOf("token=");
-                        tokenid[index] = tokenid[index].substring(indeex2 +6, tokenid[index].length());
-
-                        Toast.makeText(getBaseContext(),tokenid[index], Toast.LENGTH_SHORT).show();
-
-
-                    }
-                }
-
-
-
-
+                        tokenid[index] = tokenid[index].substring(indeex2 + 6, tokenid[index].length());
+                        Toast.makeText(getBaseContext(), tokenid[index], Toast.LENGTH_SHORT).show();
+                    }//end if
+                }//end for loop
             }
 
 
@@ -289,7 +275,6 @@ public class Employee extends ActionBarActivity {
             }
 
         });
-
 
 
     }
