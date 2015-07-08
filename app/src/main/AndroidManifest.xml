@@ -26,10 +26,6 @@
             android:name=".Employee"
             android:label="@string/title_activity_employee" >
         </activity>
-        <activity
-            android:name=".viewList"
-            android:label="@string/title_activity_view_list" >
-        </activity>
     </application>
 
 </manifest>

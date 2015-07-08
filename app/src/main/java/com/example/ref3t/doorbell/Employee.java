@@ -212,7 +212,7 @@ public class Employee extends ActionBarActivity {
         initListDefult();
     }
 
-
+//function intialize the list and add to database and add type and name and date to firebase
     public void initListDefult() {
         Firebase.setAndroidContext(getApplication().getApplicationContext());
         ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Defult");//refrence link of firebase of default
