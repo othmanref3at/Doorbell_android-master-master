@@ -1,6 +1,8 @@
 package com.example.ref3t.doorbell;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -79,6 +81,7 @@ public class Employee extends ActionBarActivity {
                             PushNotification task = new PushNotification();
                             task.Api_pc=listItems2.get(position);
                             task.execute();
+                            alertMasseg();
                           //  Toast.makeText(getBaseContext(), listItems.get(position) + "kkkk"+listItems2.get(position), Toast.LENGTH_SHORT).show();
 
                         }
@@ -182,14 +185,16 @@ public class Employee extends ActionBarActivity {
                         add_to_database(position);
 
                         PushNotification task = new PushNotification();
-                        task.Api_pc=Id[position];
+                        task.Api_pc = Id[position];
                         task.execute();
+                        alertMasseg();
 //                        Toast.makeText(getBaseContext(), listItems.get(position) + "*fffffff*" + Id[position], Toast.LENGTH_SHORT).show();
 
                     }
                 });
 
             }
+
             @Override
             public void onCancelled(FirebaseError error) {
 
@@ -226,9 +231,32 @@ public class Employee extends ActionBarActivity {
     public void ClickButtonDefualt(View view) {
         //call function to intialize list of defult employee
         initListDefult();
+        alertMasseg();
     }
 
-//function intialize the list and add to database and add type and name and date to firebase
+    private void alertMasseg() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Welcome to yamsafer");
+        alertDialog.setMessage("You send notification ...please wait!!" + "01:00");
+        alertDialog.show();   //
+
+        new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                alertDialog.setMessage("You send notification ...please wait!! (00:"+ (millisUntilFinished/1000)+")");
+                if(millisUntilFinished/1000==1){
+
+                    alertDialog.hide();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
+    }
+
+    //function intialize the list and add to database and add type and name and date to firebase
     public void initListDefult() {
         Firebase.setAndroidContext(getApplication().getApplicationContext());
         ref = new Firebase("https://doorbellyamsafer.firebaseio.com/Defult");//refrence link of firebase of default
@@ -281,6 +309,7 @@ public class Employee extends ActionBarActivity {
                         PushNotification task = new PushNotification();
                         task.Api_pc=tokenid[index];
                         task.execute();
+
 //                        Toast.makeText(getBaseContext(), "vvvvvvvdddddd"+tokenid[index], Toast.LENGTH_SHORT).show();
                     }//end if
                 }//end for loop

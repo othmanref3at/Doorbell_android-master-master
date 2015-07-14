@@ -1,7 +1,11 @@
 package com.example.ref3t.doorbell;
 
+import android.app.AlertDialog;
+import android.app.MediaRouteButton;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.CountDownTimer;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -93,6 +97,9 @@ public class MainActivity extends ActionBarActivity {
     //Button Interview click
     public void interClickedButton(View view) {
         interVeiw();//call function to push notification to inter view group
+        alertMasseg();
+
+
     }//end button
 
     //function to push the interview group to data base history and push notification to interview group
@@ -137,8 +144,9 @@ public class MainActivity extends ActionBarActivity {
 //                        Toast.makeText(getBaseContext(), tokenid[index], Toast.LENGTH_SHORT).show();
 
                         PushNotification task = new PushNotification();
-                        task.Api_pc=tokenid[index];
+                        task.Api_pc = tokenid[index];
                         task.execute();
+
 
                     }//end if
                 }//end loop
@@ -152,6 +160,28 @@ public class MainActivity extends ActionBarActivity {
         });
 
 
+    }
+    private void alertMasseg() {
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Welcome to yamsafer");
+        alertDialog.setMessage("You send notification ...please wait!!"+"01:00");
+        alertDialog.show();   //
+
+        new CountDownTimer(60000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                alertDialog.setMessage("You send notification ...please wait!! (00:"+ (millisUntilFinished/1000)+")");
+                if(millisUntilFinished/1000==1){
+
+                    alertDialog.hide();
+                }
+            }
+
+            @Override
+            public void onFinish() {
+            }
+        }.start();
     }
 
 }

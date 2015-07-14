@@ -22,6 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:hint="Search"
+
+        style="@style/button_text"
         android:layout_weight="1"
 
         />
@@ -30,11 +32,15 @@
         android:layout_height="fill_parent"
         android:text="Defualt"
         android:layout_weight="1"
+            android:background="@drawable/text"
+            style="@style/button_text"
 
-        android:textColor="#000000"
+        android:textColor="#fff"
             android:onClick="ClickButtonDefualt" />
     </LinearLayout>
     <LinearLayout
+
+        style="@style/button_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -42,6 +48,9 @@
         <ListView
         android:id="@+id/listview"
         android:layout_width="fill_parent"
+
+            android:textColor="#000"
+            style="@style/button_text"
         android:layout_height="fill_parent"
         >
 
