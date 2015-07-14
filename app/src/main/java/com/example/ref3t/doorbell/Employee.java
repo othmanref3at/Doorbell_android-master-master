@@ -30,6 +30,8 @@ import java.util.Map;
 public class Employee extends ActionBarActivity {
     String[] items_name;//array of name
     ArrayList<String> listItems;//list of serch list
+
+    ArrayList<String> listItems2;//list of serch list
     ArrayAdapter<String> adapter;
     ListView listView;
     EditText editText;
@@ -74,7 +76,10 @@ public class Employee extends ActionBarActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             add_to_database(position);
-                            Toast.makeText(getBaseContext(), listItems.get(position) + "kkkk", Toast.LENGTH_SHORT).show();
+                            PushNotification task = new PushNotification();
+                            task.Api_pc=listItems2.get(position);
+                            task.execute();
+                          //  Toast.makeText(getBaseContext(), listItems.get(position) + "kkkk"+listItems2.get(position), Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -96,7 +101,7 @@ public class Employee extends ActionBarActivity {
         date_time = date_time.replaceAll(" ", "-");
         //check if the button delivry or visitor
         if (number.equals("delivary")) {
-            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
             push_to_firebase.put("name", listItems.get(position));
             push_to_firebase.put("type", "Delivary");
             push_to_firebase.put("Time", date_time);
@@ -107,7 +112,7 @@ public class Employee extends ActionBarActivity {
             push_to_firebase.put("Time", date_time);
             addhistory.push().setValue(push_to_firebase);
 
-            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
         }//end if
     }
 
@@ -115,7 +120,10 @@ public class Employee extends ActionBarActivity {
     public void searchItem(String textToSearch) {
         for (String item : items_name) {
             if (!item.contains(textToSearch)) {
+                int ind=listItems.indexOf(item);
                 listItems.remove(item);//remove items in array list
+                listItems2.remove(listItems2.get(ind));
+
             }//end if
         }//end for
         adapter.notifyDataSetChanged();
@@ -162,13 +170,21 @@ public class Employee extends ActionBarActivity {
                 items_name = buffer_name.toString().split("#");
                 Id = bufferid_token.toString().split("#");
                 listItems = new ArrayList<>(Arrays.asList(items_name));
+
+                listItems2 = new ArrayList<>(Arrays.asList(Id));
+//                Toast.makeText(getBaseContext(), listItems2.toString(), Toast.LENGTH_SHORT).show();
+
                 adapter = new ArrayAdapter<String>(Employee.this, R.layout.list_item, R.id.txtitem, listItems);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         add_to_database(position);
-                        Toast.makeText(getBaseContext(), listItems.get(position) + "**" + Id[position], Toast.LENGTH_SHORT).show();
+
+                        PushNotification task = new PushNotification();
+                        task.Api_pc=Id[position];
+                        task.execute();
+//                        Toast.makeText(getBaseContext(), listItems.get(position) + "*fffffff*" + Id[position], Toast.LENGTH_SHORT).show();
 
                     }
                 });
@@ -240,12 +256,12 @@ public class Employee extends ActionBarActivity {
                     if (string_tokanizer[index].contains("name=")) {
                         int indeex1 = string_tokanizer[index].indexOf("=");
                         string_tokanizer[index] = string_tokanizer[index].substring(indeex1 + 1, string_tokanizer[index].indexOf("}"));
-                        Toast.makeText(getBaseContext(), string_tokanizer[index], Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getBaseContext(), string_tokanizer[index], Toast.LENGTH_SHORT).show();
                         String date_time = form.format(calender.getTime());
                         date_time = date_time.replaceAll(" ", "-");
 
                         if (number.equals("delivary")) {
-                            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getBaseContext(), "this massage to delivery " + number, Toast.LENGTH_LONG).show();
                             push_to_firebase.put("name", string_tokanizer[index]);
                             push_to_firebase.put("type", "Delivary");
                             push_to_firebase.put("Time", date_time);
@@ -256,13 +272,16 @@ public class Employee extends ActionBarActivity {
                             push_to_firebase.put("Time", date_time);
                             addhistory.push().setValue(push_to_firebase);
 
-                            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
+//                            Toast.makeText(getBaseContext(), "this massage to visitor " + number, Toast.LENGTH_LONG).show();
                         }
                     }//end if
                     if (tokenid[index].contains("token=")) {
                         int indeex2 = tokenid[index].lastIndexOf("token=");
                         tokenid[index] = tokenid[index].substring(indeex2 + 6, tokenid[index].length());
-                        Toast.makeText(getBaseContext(), tokenid[index], Toast.LENGTH_SHORT).show();
+                        PushNotification task = new PushNotification();
+                        task.Api_pc=tokenid[index];
+                        task.execute();
+//                        Toast.makeText(getBaseContext(), "vvvvvvvdddddd"+tokenid[index], Toast.LENGTH_SHORT).show();
                     }//end if
                 }//end for loop
             }

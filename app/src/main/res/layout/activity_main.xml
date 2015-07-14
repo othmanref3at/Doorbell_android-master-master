@@ -1,121 +1,77 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cbc9c9"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    android:weightSum="4"
-    android:background="@drawable/bac1"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+    android:weightSum="1"
+    tools:context="com.example.admin.myapplication.MainActivity2Activity">
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        >
-
-        <Button
-            android:layout_width="fill_parent"
-
-            android:background="@drawable/bbba"
-
-            android:layout_marginTop="@dimen/abc_action_bar_default_padding_material"
-
-            android:layout_marginBottom="@dimen/abc_action_bar_default_padding_material"
-
-            android:text="Please choose: "
-            android:textColor="@color/secondary_text_default_material_light"
-            android:shadowRadius="@integer/abc_config_activityDefaultDur"
-
-            android:textSize="@dimen/abc_text_size_headline_material"
-            android:textStyle="bold|italic"
-            android:layout_height="wrap_content"
-            android:singleLine="true" />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-
         android:orientation="horizontal"
-        >
+        android:weightSum="1">
 
-        <ImageView
+
+        <TextView
+
+            android:id="@+id/textView"
             android:layout_width="fill_parent"
-            android:layout_weight="9"
-            android:src="@drawable/delivery"
-            android:layout_height="fill_parent" />
-        <Button
-            android:textSize="@dimen/abc_text_size_headline_material"
-
-            android:layout_width="fill_parent"
-            android:layout_weight="4"
-            android:onClick="DelivaryClickedButton"
-            android:text="Delivery"
-            android:layout_marginTop="@dimen/abc_action_bar_default_padding_material"
-
-            android:layout_marginBottom="@dimen/abc_action_bar_default_padding_material"
-            android:textStyle="bold"
-            android:layout_height="fill_parent"
-            android:textColor="@color/secondary_text_default_material_light"
-            android:id="@+id/delivary" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Please Choose:"
+            android:textColor="#000"
+            android:textSize="50dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
     <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:orientation="horizontal"
-    >
-
-    <ImageView
         android:layout_width="fill_parent"
-        android:layout_weight="9"
-        android:src="@drawable/visitor"
-        android:layout_height="fill_parent" />
-    <Button
-        android:textSize="@dimen/abc_text_size_headline_material"
-        android:textStyle="bold"
-        android:layout_width="fill_parent"
-        android:layout_weight="4"
-        android:layout_marginTop="@dimen/abc_action_bar_default_padding_material"
-        android:onClick="visitorClickedButton"
-        android:text="Visitor"
-        android:layout_marginBottom="@dimen/abc_action_bar_default_padding_material"
-        android:layout_height="fill_parent"
-        android:enabled="true"
-        android:textColor="@color/secondary_text_default_material_light" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:weightSum="3">
 
-</LinearLayout>
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:onClick="interClickedButton"
+            android:background="@drawable/interveiwimagee"
+            />
+
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/visitorimg"
+            android:onClick="visitorClickedButton" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:onClick="DelivaryClickedButton"
+            android:layout_weight="1"
+            android:background="@drawable/deliveryimage"
+            />
+    </LinearLayout>
     <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_weight="1"
-    android:orientation="horizontal"
-    >
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_weight="9"
-        android:src="@drawable/interview"
-        android:layout_height="fill_parent" />
-    <Button
-        android:textSize="@dimen/abc_text_size_headline_material"
-
-        android:layout_width="fill_parent"
-        android:layout_weight="4"
-        android:onClick="interClickedButton"
-        android:layout_marginBottom="@dimen/abc_action_bar_default_padding_material"
-        android:layout_marginTop="@dimen/abc_action_bar_default_padding_material"
-        android:textStyle="bold"
-        android:text="Interveiew"
-        android:layout_height="fill_parent"
-        android:textColor="@color/secondary_text_default_material_light" />
-
-</LinearLayout>
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        ></LinearLayout>
 
 </LinearLayout>

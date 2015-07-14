@@ -1,8 +1,11 @@
 package com.example.ref3t.doorbell;
 
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +16,17 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -30,7 +44,7 @@ public class MainActivity extends ActionBarActivity {
     String str_id = "";
     String[] tokenid;
     StringBuffer bufferid;
-
+    String Api_pc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +134,12 @@ public class MainActivity extends ActionBarActivity {
                     if (tokenid[index].contains("token=")) {
                         int indeex2 = tokenid[index].lastIndexOf("token=");
                         tokenid[index] = tokenid[index].substring(indeex2 + 6, tokenid[index].length());
-                        Toast.makeText(getBaseContext(), tokenid[index], Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(getBaseContext(), tokenid[index], Toast.LENGTH_SHORT).show();
+
+                        PushNotification task = new PushNotification();
+                        task.Api_pc=tokenid[index];
+                        task.execute();
+
                     }//end if
                 }//end loop
             }
@@ -131,5 +150,8 @@ public class MainActivity extends ActionBarActivity {
             }
 
         });
+
+
     }
+
 }
