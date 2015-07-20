@@ -79,10 +79,10 @@ public class Employee extends ActionBarActivity {
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             add_to_database(position);
                             PushNotification task = new PushNotification();
-                            task.Api_pc=listItems2.get(position);
+                            task.Api_pc = listItems2.get(position);
                             task.execute();
                             alertMasseg();
-                          //  Toast.makeText(getBaseContext(), listItems.get(position) + "kkkk"+listItems2.get(position), Toast.LENGTH_SHORT).show();
+                            //  Toast.makeText(getBaseContext(), listItems.get(position) + "kkkk"+listItems2.get(position), Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -123,7 +123,7 @@ public class Employee extends ActionBarActivity {
     public void searchItem(String textToSearch) {
         for (String item : items_name) {
             if (!item.contains(textToSearch)) {
-                int ind=listItems.indexOf(item);
+                int ind = listItems.indexOf(item);
                 listItems.remove(item);//remove items in array list
                 listItems2.remove(listItems2.get(ind));
 
@@ -243,8 +243,8 @@ public class Employee extends ActionBarActivity {
         new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                alertDialog.setMessage("You send notification ...please wait!! (00:"+ (millisUntilFinished/1000)+")");
-                if(millisUntilFinished/1000==1){
+                alertDialog.setMessage("You send notification ...please wait!! (00:" + (millisUntilFinished / 1000) + ")");
+                if (millisUntilFinished / 1000 == 1) {
 
                     alertDialog.hide();
                 }
@@ -307,7 +307,7 @@ public class Employee extends ActionBarActivity {
                         int indeex2 = tokenid[index].lastIndexOf("token=");
                         tokenid[index] = tokenid[index].substring(indeex2 + 6, tokenid[index].length());
                         PushNotification task = new PushNotification();
-                        task.Api_pc=tokenid[index];
+                        task.Api_pc = tokenid[index];
                         task.execute();
 
 //                        Toast.makeText(getBaseContext(), "vvvvvvvdddddd"+tokenid[index], Toast.LENGTH_SHORT).show();
