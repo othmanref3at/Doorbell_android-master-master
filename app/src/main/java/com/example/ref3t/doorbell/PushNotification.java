@@ -28,36 +28,24 @@ public class PushNotification extends AsyncTask<String, Void, HttpResponse>{
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
-
-            Log.i("msg", "test1");
+          //establish conniction
             HttpClient httpclient = new DefaultHttpClient();
-            Log.i("msg", "test2");
+            //to initialize post request url
             HttpPost httppost = new HttpPost("https://android.googleapis.com/gcm/send");
-
             HttpResponse Response = null;
             try {
+                //convert curl command to be executable in android ,run notify to pc api using key and api pc 
                 httppost.setHeader("Content-Type", "application/json");
                 httppost.setHeader("Authorization", "key=AIzaSyAQxsSLcZtAV_vplw302NKRuUubxegqKa0");
-                //  httppost.setHeader("senderID","736620167368");
                 httppost.setHeader("Host","android.googleapis.com");
-                //Create JSONObject here
                 JSONObject jsonBodyObject = new JSONObject();
                 jsonBodyObject.put("registration_ids",new JSONArray("[\""+Api_pc+"\"]"));
-                //  jsonBodyObject.put("senderID","736620167368");
-                //StringEntity entity = new StringEntity(jsonBodyObject.toString(), "UTF-8");
                 ByteArrayEntity entity = new ByteArrayEntity(jsonBodyObject.toString().getBytes("UTF8"));
                 httppost.setEntity(entity);
-
-                Log.i("msg", "test3");
-
                 Response = httpclient.execute(httppost);
-                Log.i("msg", "test4");
-                Log.i("response", Response.getStatusLine().toString());
             } catch (ClientProtocolException e) {
-                Log.i("msg", "test6");
                 // TODO Auto-generated catch block
             } catch (IOException e) {
-                Log.i("msg", "test7");
                 // TODO Auto-generated catch block
             } catch (JSONException e) {
                 e.printStackTrace();
