@@ -1,53 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:weightSum="4"
+    android:weightSum="2"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1.4"
+        android:orientation="vertical">
     <TextView
         android:text="Please choose:"
+        android:textSize="40dp"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button1"
-        android:layout_weight="1"
-        android:layout_margin="5dp"
+        android:layout_height="fill_parent"
+        android:id="@+id/textmain"
         android:background="@drawable/text"
         style="@style/button_text"/>
-    <Button
-        android:text="Interveiw"
-        android:onClick="interClickedButton"
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button2"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.6">
+        <ListView
+            android:id="@+id/listviewc"
+            android:layout_width="fill_parent"
+            android:textSize="60dp"
+            android:textColor="#fff"
+            android:layout_height="fill_parent"
+            >
 
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:background="@drawable/red_button"
-        style="@style/button_text"/>
+        </ListView>
 
-    <Button
-        android:text="Delivery"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button3"
-        android:layout_weight="1"
-
-        android:layout_margin="5dp"
-        android:onClick="DelivaryClickedButton"
-        android:background="@drawable/red_button"
-        style="@style/button_text"/>
-
-    <Button
-        android:text="Visitor"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/button4"
-        android:layout_weight="1"
-
-        android:layout_margin="5dp"
-        android:onClick="visitorClickedButton"
-        android:background="@drawable/red_button"
-        style="@style/button_text"/>
-
-
-</LinearLayout>
+    </LinearLayout>
+    </LinearLayout>

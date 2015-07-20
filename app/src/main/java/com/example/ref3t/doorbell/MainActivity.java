@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.MediaRouteButton;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
 import android.os.StrictMode;
@@ -13,6 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -32,6 +37,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,12 +54,49 @@ public class MainActivity extends ActionBarActivity {
     Map<String, String> push_to_firebase = new HashMap<String, String>();
     String str_id = "";
     String[] tokenid;
+    ListView listView;
     StringBuffer bufferid;
     String Api_pc;
+    ArrayAdapter<String> adapter;
+    ArrayList<String> listItems;//list of serch list
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listView = (ListView) findViewById(R.id.listviewc);
+        TextView txt=(TextView)findViewById(R.id.textmain);
+        Typeface tepeface=Typeface.createFromAsset(getAssets(), "fonts/Chantelli_Antiqua.ttf");
+        txt.setTypeface(tepeface);
+
+        String [] items_name={"Interveiw","Delivery","Visitor"};
+        listItems = new ArrayList<>(Arrays.asList(items_name));
+
+//                Toast.makeText(getBaseContext(), listItems2.toString(), Toast.LENGTH_SHORT).show();
+
+        adapter = new ArrayAdapter<String>(MainActivity.this, R.layout.layoutlistmain, R.id.txtitem, listItems);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if(listItems.get(position).equals("Interveiw")){
+                    interClickedButton();
+                   // Toast.makeText(getBaseContext(), listItems.get(position) + "*fffffff*" , Toast.LENGTH_SHORT).show();
+
+                }else if(listItems.get(position).equals("Visitor")){
+                    visitorClickedButton();
+                  //  Toast.makeText(getBaseContext(), listItems.get(position) + "*fffffff*" , Toast.LENGTH_SHORT).show();
+
+                }else{
+
+                    DelivaryClickedButton();
+                  //  Toast.makeText(getBaseContext(), listItems.get(position) + "*fffffff*" , Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
 
     }
 
@@ -81,21 +125,21 @@ public class MainActivity extends ActionBarActivity {
     }
 
     //Button visitor click
-    public void visitorClickedButton(View view) {
+    public void visitorClickedButton() {
         Intent intent = new Intent(this, Employee.class);//intent to open new activity Employee
         intent.putExtra("key", "visitor");//send data toEmployee activity to how click on button
         startActivity(intent);//start of activity
     }//end button
 
     //Button Delivary click
-    public void DelivaryClickedButton(View view) {
+    public void DelivaryClickedButton() {
         Intent intent = new Intent(this, Employee.class);//intent to open new activity Employee
         intent.putExtra("key", "delivary");//send data toEmployee activity to how click on button
         startActivity(intent);//start of activity
     }//end button
 
     //Button Interview click
-    public void interClickedButton(View view) {
+    public void interClickedButton() {
         interVeiw();//call function to push notification to inter view group
         alertMasseg();
 
